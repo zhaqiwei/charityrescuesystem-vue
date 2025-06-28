@@ -1,292 +1,344 @@
-<script setup>
-import { onMounted } from 'vue'
-
-// 在组件挂载后初始化 jQuery 事件
-onMounted(() => {
-  $('#signup').click(function() {
-    $('.pinkbox').css('transform', 'translateX(80%)');
-    $('.signin').addClass('nodisplay');
-    $('.signup').removeClass('nodisplay');
-  });
-
-  $('#signin').click(function() {
-    $('.pinkbox').css('transform', 'translateX(0%)');
-    $('.signup').addClass('nodisplay');
-    $('.signin').removeClass('nodisplay');
-  });
-})
-</script>
-
 <template>
-  <div class="container">
-    <div class="welcome">
-      <div class="pinkbox">
-        <div class="signup nodisplay">
-          <h1>register</h1>
-          <form autocomplete="off">
-            <input type="text" placeholder="username">
-            <input type="email" placeholder="email">
-            <input type="password" placeholder="password">
-            <input type="password" placeholder="confirm password">
-            <button class="button submit">create account </button>
-          </form>
-        </div>
-        <div class="signin">
-          <h1>sign in</h1>
-          <form class="more-padding" autocomplete="off">
-            <input type="text" placeholder="username">
-            <input type="password" placeholder="password">
-            <div class="checkbox">
-              <input type="checkbox" id="remember" /><label for="remember">remember me</label>
-            </div>
+  <div class="login-container">
+    <div class="form-container" :class="{'right-panel-active': showRegister}">
+      <!-- 登录表单 -->
+      <div class="form sign-in-container">
+        <form @submit.prevent="handleLogin">
+          <h1>登录账号</h1>
+          <input type="text" placeholder="用户名" v-model="loginUsername" required />
+          <input type="password" placeholder="密码" v-model="loginPassword" required />
+          <button type="submit">登录</button>
+        </form>
+      </div>
 
-            <button class="button submit">login</button>
-          </form>
+      <!-- 注册表单 -->
+      <div class="form sign-up-container">
+        <form @submit.prevent="handleRegister">
+          <h1>创建账号</h1>
+          <input type="text" placeholder="用户名" v-model="registerUsername" required />
+          <input type="password" placeholder="密码" v-model="registerPassword" required />
+          <input type="password" placeholder="确认密码" v-model="registerConfirmPassword" required />
+          <button type="submit">注册</button>
+        </form>
+      </div>
+
+      <!-- 覆盖面板 -->
+      <div class="overlay-container">
+        <div class="overlay">
+          <div class="overlay-panel overlay-left">
+            <h1>已有账号?</h1>
+            <p>请使用您的账号信息登录</p>
+            <button class="ghost" @click="showRegister = false">登录</button>
+          </div>
+          <div class="overlay-panel overlay-right">
+            <h1>新用户?</h1>
+            <p>立即注册，开启您的旅程</p>
+            <button class="ghost" @click="showRegister = true">注册</button>
+          </div>
         </div>
-      </div>
-      <div class="leftbox">
-        <h2 class="title"><span>BLOOM</span>&<br>BOUQUET</h2>
-        <p class="desc">pick your perfect <span>bouquet</span></p>
-        <img class="flower smaller" src="https://image.ibb.co/d5X6pn/1357d638624297b.jpg" alt="1357d638624297b" border="0">
-        <p class="account">have an account?</p>
-        <button class="button" id="signin">login</button>
-      </div>
-      <div class="rightbox">
-        <h2 class="title"><span>BLOOM</span>&<br>BOUQUET</h2>
-        <p class="desc"> pick your perfect <span>bouquet</span></p>
-        <img class="flower" src="https://preview.ibb.co/jvu2Un/0057c1c1bab51a0.jpg"/>
-        <p class="account">don't have an account?</p>
-        <button class="button" id="signup">sign up</button>
       </div>
     </div>
   </div>
 </template>
 
-<style scoped lang="scss">
+<script>
+import { ElMessage } from 'element-plus'
+import request from '@/utils/request'
 
+export default {
+  name: 'LoginView',
+  data() {
+    return {
+      showRegister: false,
+      loginUsername: '',
+      loginPassword: '',
+      registerUsername: '',
+      registerPassword: '',
+      registerConfirmPassword: ''
+    }
+  },
+  methods: {
+    async handleLogin() {
+      if (!this.loginUsername || !this.loginPassword) {
+        ElMessage.error('请输入用户名和密码')
+        return
+      }
 
-$gray: #8E9AAF;
-$lavender: #CBC0D3;
-$pale: #EAC7CC;
-$white: #f6f6f6;
+      try {
+        const response = await request.post('/user/login', {
+          username: this.loginUsername,
+          password: this.loginPassword
+        })
 
-$pink: darken($pale, 20%);
+        if (response.code === 200) {
+          // 存储token（简单实现）
+          localStorage.setItem('token', response.data.token)
 
-@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400|Lora');
+          ElMessage.success('登录成功')
+          this.$router.push('/')
+        } else {
+          ElMessage.error(response.message || '登录失败')
+        }
+      } catch (error) {
+        ElMessage.error('登录请求失败，请检查网络')
+      }
+    },
 
-$sans-serif: 'Open Sans', sans-serif;
-$serif: 'Lora', serif;
+    async handleRegister() {
+      if (this.registerPassword !== this.registerConfirmPassword) {
+        ElMessage.error('两次输入的密码不一致')
+        return
+      }
 
+      try {
+        const response = await request.post('/user/register', {
+          username: this.registerUsername,
+          password: this.registerPassword
+        })
 
-body {
-  background: $lavender;
-}
-
-/* div box styling */
-.container {
-  margin: auto;
-  width: 650px;
-  height: 550px;
-  position: relative;
-}
-
-.welcome {
-  background: $white;
-  width: 650px;
-  height: 415px;
-  position: absolute;
-  top: 25%;
-  border-radius: 5px;
-  box-shadow: 5px 5px 5px rgba(0,0,0,.1);
-}
-
-.pinkbox {
-  position: absolute;
-  top: -10%;
-  left: 5%;
-  background: $pale;
-  width: 320px;
-  height: 500px;
-  border-radius: 5px;
-  box-shadow: 2px 0 10px rgba(0,0,0,.1);
-  transition: all .5s ease-in-out;
-  z-index: 2;
-}
-
-.nodisplay {
-  display:none;
-  transition: all .5s ease;
-}
-
-.leftbox, .rightbox {
-  position: absolute;
-  width: 50%;
-  transition: 1s all ease;
-}
-
-.leftbox {
-  left: -2%;
-}
-.rightbox {
-  right: -2%;
-}
-
-/* font & button styling */
-h1 {
-  font-family: $sans-serif;
-  text-align: center;
-  margin-top: 95px;
-  text-transform: uppercase;
-  color: $white;
-  font-size: 2em;
-  letter-spacing: 8px;
-}
-
-.title {
-  font-family: $serif;
-  color: $gray;
-  font-size: 1.8em;
-  line-height: 1.1em;
-  letter-spacing: 3px;
-  text-align: center;
-  font-weight: 300;
-  margin-top: 20%;
-}
-.desc {
-  margin-top: -8px;
-}
-.account {
-  margin-top: 45%;
-  font-size: 10px;
-}
-p {
-  font-family: $sans-serif;
-  font-size: .7em;
-  letter-spacing: 2px;
-  color: $gray;
-  text-align: center;
-}
-
-span {
-  color: $pale;
-}
-
-.flower {
-  position: absolute;
-  width: 120px;
-  height: 120px;
-  top: 46%;
-  left: 29%;
-  opacity: .7;
-}
-
-.smaller {
-  width: 90px;
-  height: 100px;
-  top: 48%;
-  left: 38%;
-  opacity: .9;
-}
-
-button {
-  padding: 12px;
-  font-family: $sans-serif;
-  text-transform: uppercase;
-  letter-spacing: 3px;
-  font-size: 11px;
-  border-radius: 10px;
-  margin: auto;
-  outline: none;
-  display: block;
-  &:hover {
-    background: $pale;
-    color: $white;
-    transition: background-color 1s ease-out;
-  }
-}
-
-.button {
-  margin-top: 3%;
-  background: $white;
-  color: $pink;
-  border: solid 1px $pale;
-}
-
-/* form styling */
-
-form {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  padding-top: 7px;
-}
-.more-padding{
-  padding-top: 35px;
-  input {
-    padding: 12px;
-  }
-  .submit {
-    margin-top: 45px;
-  }
-}
-.submit {
-  margin-top: 25px;
-  padding: 12px;
-  border-color: $pink;
-  &:hover {
-    background: $lavender;
-    border-color: darken($lavender, 5%);
-  }
-}
-
-input {
-  background: $pale;
-  width: 65%;
-  color: $pink;
-  border: none;
-  border-bottom: 1px solid rgba($white, 0.5);
-  padding: 9px;
-  margin: 7px;
-  &::placeholder {
-    color: rgba($white, 1);
-    letter-spacing: 2px;
-    font-size: 1.3em;
-    font-weight: 100;
-  }
-  &:focus {
-    color: $pink;
-    outline: none;
-    border-bottom: 1.2px solid rgba($pink, 0.7);
-    font-size: 1em;
-    transition: .8s all ease;
-    &::placeholder {
-      opacity: 0;
+        if (response.code === 200) {
+          ElMessage.success('注册成功，请登录')
+          this.showRegister = false
+        } else {
+          ElMessage.error(response.message || '注册失败')
+        }
+      } catch (error) {
+        ElMessage.error('注册请求失败，请检查网络')
+      }
     }
   }
 }
+</script>
 
-label {
-  font-family: $sans-serif;
-  color: $pink;
-  font-size: 0.8em;
-  letter-spacing: 1px;
+<style scoped>
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: url('../assets/shoubei.png') no-repeat center center fixed;
+  background-size: cover;
+  padding: 20px;
 }
 
-.checkbox {
-  display: inline;
-  white-space: nowrap;
+.form-container {
   position: relative;
-  left: -62px;
-  top: 5px;
+  width: 850px;
+  height: 500px;
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+  backdrop-filter: blur(8px);
 }
 
-input[type=checkbox] {
-  width: 7px;
-  background: $pink;
+.form-container.right-panel-active .sign-in-container {
+  transform: translateX(100%);
 }
 
-.checkbox input[type="checkbox"]:checked + label {
-  color: $pink;
-  transition: .5s all ease;
+.form-container.right-panel-active .sign-up-container {
+  transform: translateX(100%);
+  opacity: 1;
+  z-index: 5;
+}
+
+.form-container.right-panel-active .overlay-container {
+  transform: translateX(-100%);
+}
+
+.form-container.right-panel-active .overlay {
+  transform: translateX(50%);
+}
+
+.form-container.right-panel-active .overlay-left {
+  transform: translateX(0);
+}
+
+.form-container.right-panel-active .overlay-right {
+  transform: translateX(20%);
+}
+
+.form {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  transition: all 0.6s ease-in-out;
+}
+
+.sign-in-container {
+  left: 0;
+  width: 50%;
+  z-index: 2;
+}
+
+.sign-up-container {
+  left: 0;
+  width: 50%;
+  opacity: 0;
+  z-index: 1;
+}
+
+form {
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  padding: 0 50px;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+h1 {
+  font-weight: bold;
+  margin: 0;
+  color: #333;
+  font-size: 32px;
+  margin-bottom: 30px;
+}
+
+input {
+  background: #f5f7fa;
+  border: 1px solid #e0e3e9;
+  padding: 14px 18px;
+  margin: 10px 0;
+  width: 100%;
+  border-radius: 10px;
+  outline: none;
+  transition: all 0.3s;
+  font-size: 15px;
+}
+
+input:focus {
+  border-color: #4a6cf7;
+  box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.2);
+}
+
+button {
+  border-radius: 50px;
+  border: none;
+  background: #4a6cf7;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 14px 45px;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  margin-top: 20px;
+  box-shadow: 0 4px 15px rgba(74, 108, 247, 0.3);
+  width: 100%;
+}
+
+button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(74, 108, 247, 0.4);
+  background: #3a5ae8;
+}
+
+button:active {
+  transform: translateY(1px);
+}
+
+button.ghost {
+  background: transparent;
+  border: 2px solid #fff;
+  box-shadow: none;
+  width: auto;
+  margin-top: 15px;
+}
+
+button.ghost:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.overlay-container {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 50%;
+  height: 100%;
+  overflow: hidden;
+  transition: transform 0.6s ease-in-out;
+  z-index: 100;
+}
+
+.overlay {
+  background: url('../assets/b1.png') no-repeat center center;
+  background-size: cover;
+  color: #fff;
+  position: relative;
+  left: -100%;
+  height: 100%;
+  width: 200%;
+
+
+  transform: translateX(0);
+  transition: transform 0.6s ease-in-out;
+  display: flex;
+}
+
+.overlay-panel {
+  position: absolute;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0 40px;
+  height: 100%;
+  width: 50%;
+  text-align: center;
+  transform: translateX(0);
+  transition: transform 0.6s ease-in-out;
+}
+
+.overlay-left {
+  transform: translateX(-20%);
+}
+
+.overlay-right {
+  right: 0;
+  transform: translateX(0);
+}
+
+.overlay-panel h1 {
+  color: white;
+  font-size: 36px;
+  margin-bottom: 15px;
+}
+
+.overlay-panel p {
+  font-size: 16px;
+  margin: 0 0 25px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .form-container {
+    width: 100%;
+    height: auto;
+    min-height: 500px;
+  }
+
+  .sign-in-container,
+  .sign-up-container {
+    width: 100%;
+    position: relative;
+  }
+
+  .overlay-container {
+    display: none;
+  }
+
+  .form-container.right-panel-active .sign-in-container,
+  .form-container.right-panel-active .sign-up-container {
+    transform: translateX(0);
+  }
+
+  .form-container.right-panel-active .sign-in-container {
+    opacity: 0;
+  }
 }
 </style>
