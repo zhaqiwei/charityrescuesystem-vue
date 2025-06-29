@@ -9,6 +9,21 @@ const router=createRouter({
         { path:'/login',  name:'login',  component:()=>import('../views/LogIn.vue')  },
         {path:'/Gongyizixun',name:'Gongyizixun',component:()=>import('../views/Gongyizixun.vue')},
         {
+        path: '/community',
+        name: 'Community',
+        component: () => import('@/views/Community.vue')
+    },
+    {
+        path: '/community/:id',
+        name: 'PostDetail',
+        component: () => import('@/views/PostDetail.vue')
+    },
+    {
+        path: '/community/create',
+        name: 'CreatePost',
+        component: () => import('@/views/CreatePost.vue')
+    },
+        {
         path: '/news/2',
         name: 'NewsDetail2',
         component: () => import('@/views/NewsDetail2.vue')
