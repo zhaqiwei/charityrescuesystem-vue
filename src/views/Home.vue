@@ -20,9 +20,9 @@
     <!-- 导航 -->
     <div class="navigation">
       <router-link to="/" class="nav-link">首页</router-link>
-      <a href="#" class="nav-link">石大公益行动</a>
+      <router-link to="/gongyixingdong" class="nav-link">石大公益行动</router-link>
       <a href="#" class="nav-link">互动交流社区</a>
-      <a href="#" class="nav-link">公益资讯</a>
+      <router-link to="/gongyizixun" class="nav-link" active-class="active">公益资讯</router-link>
       <a href="#" class="nav-link">志愿报名</a>
     </div>
 
