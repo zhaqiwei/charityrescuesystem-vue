@@ -20,10 +20,10 @@
     <!-- 导航 -->
     <div class="navigation">
       <router-link to="/" class="nav-link">首页</router-link>
-      <router-link to="/gongyixingdong" class="nav-link">石大公益行动</router-link>
-      <a href="#" class="nav-link">互动交流社区</a>
+      <router-link to="/gongyixingdong" class="nav-link">中石大公益行动</router-link>
+      <router-link to="/community" class="nav-link">互动交流社区</router-link>
       <router-link to="/gongyizixun" class="nav-link" active-class="active">公益资讯</router-link>
-      <a href="#" class="nav-link">志愿报名</a>
+      <router-link to="/zhiyuanbaoming" class="nav-link" active-class="active">志愿报名</router-link>
     </div>
 
     <!-- 主要内容区域 -->
@@ -157,6 +157,8 @@
 <script>
 import Card from '@/components/Card.vue';
 import {ElCarousel, ElCarouselItem, ElButton} from 'element-plus';
+// 按需引入需要的图标
+import { UserFilled, StarFilled } from '@element-plus/icons-vue';
 
 // 导入头部背景图片
 import headerBg from '@/assets/1.jpeg';
@@ -181,7 +183,10 @@ export default {
     Card,
     ElCarousel,
     ElCarouselItem,
-    ElButton
+    ElButton,
+    // 注册图标组件
+    UserFilled,
+    StarFilled
   },
   data() {
     return {
@@ -758,3 +763,6 @@ export default {
   }
 }
 </style>
+
+
+
