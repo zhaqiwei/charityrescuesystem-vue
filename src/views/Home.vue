@@ -12,8 +12,7 @@
       </div>
 
       <div class="auth-links">
-        <router-link to="/login">登录</router-link>
-        <router-link to="/register">注册</router-link>
+        <router-link to="/login">登录/注册</router-link>
       </div>
     </div>
 
@@ -28,13 +27,11 @@
 
     <!-- 主要内容区域 -->
     <div class="main-content">
-
-
       <!-- 新增区域：左侧轮播 + 右侧信息 -->
       <div class="info-section">
         <!-- 左侧新闻轮播区域 -->
         <div class="news-carousel">
-          <h2 class="sub-section-title">公益新闻动态</h2>
+          <h2 class="sub-section-title">新闻动态</h2>
           <el-carousel height="400px" indicator-position="outside">
             <el-carousel-item v-for="(news, index) in newsList" :key="index">
               <div class="news-item">
@@ -62,8 +59,7 @@
               <div class="card-front">
                 <div class="activity-header">
                   <div class="activity-icon">
-                    <i class="el-icon-location-outline"></i>
-                    <el-icon><UserFilled /></el-icon>
+                    <el-icon><Promotion /></el-icon>
                   </div>
                   <h3>克拉玛依公益事业</h3>
                 </div>
@@ -73,10 +69,10 @@
               <div class="card-back">
                 <p>克拉玛依市近年来在公益事业方面取得了显著成就，特别<br/>是在教育援助、医疗服务和环境保护领域。</p>
                 <ul>
-                  <li><el-icon><StarFilled /></el-icon><i class="el-icon-check"></i>建立10所希望小学，覆盖偏远地区</li>
-                  <li><el-icon><StarFilled /></el-icon><i class="el-icon-check"></i>开展定期医疗下乡服务</li>
-                  <li><el-icon><StarFilled /></el-icon><i class="el-icon-check"></i>实施"绿色克拉玛依"环保计划</li>
-                  <li><el-icon><StarFilled /></el-icon><i class="el-icon-check"></i>社区老人关怀中心全覆盖</li>
+                  <li><el-icon><StarFilled /></el-icon>建立10所希望小学，覆盖偏远地区</li>
+                  <li><el-icon><StarFilled /></el-icon>开展定期医疗下乡服务</li>
+                  <li><el-icon><StarFilled /></el-icon>实施"绿色克拉玛依"环保计划</li>
+                  <li><el-icon><StarFilled /></el-icon>社区老人关怀中心全覆盖</li>
                 </ul>
               </div>
             </div>
@@ -86,8 +82,7 @@
               <div class="card-front">
                 <div class="activity-header">
                   <div class="activity-icon">
-                    <i class="el-icon-school"></i>
-                    <el-icon><UserFilled /></el-icon>
+                    <el-icon><School /></el-icon>
                   </div>
                   <h3>中国石油大学公益活动</h3>
                 </div>
@@ -97,10 +92,10 @@
               <div class="card-back">
                 <p>中国石油大学积极参与克拉玛依公益事业，师生志愿者<br>团队定期开展各类公益活动。</p>
                 <ul>
-                  <li><el-icon><StarFilled /></el-icon><i class="el-icon-check"></i>"阳光支教"计划 - 每周六义务教学</li>
-                  <li><el-icon><StarFilled /></el-icon><i class="el-icon-check"></i>环保科研项目 - 荒漠化防治研究</li>
-                  <li><el-icon><StarFilled /></el-icon><i class="el-icon-check"></i>社区健康服务 - 学生医疗队下乡</li>
-                  <li><el-icon><StarFilled /></el-icon><i class="el-icon-check"></i>老人数字生活培训 - 帮助老人使用智能设备</li>
+                  <li><el-icon><StarFilled /></el-icon>"阳光支教"计划 - 每周六义务教学</li>
+                  <li><el-icon><StarFilled /></el-icon>环保科研项目 - 荒漠化防治研究</li>
+                  <li><el-icon><StarFilled /></el-icon>社区健康服务 - 学生医疗队下乡</li>
+                  <li><el-icon><StarFilled /></el-icon>老人数字生活培训 - 帮助老人使用智能设备</li>
                 </ul>
               </div>
             </div>
@@ -158,7 +153,12 @@
 import Card from '@/components/Card.vue';
 import {ElCarousel, ElCarouselItem, ElButton} from 'element-plus';
 // 按需引入需要的图标
-import { UserFilled, StarFilled } from '@element-plus/icons-vue';
+import {
+  UserFilled,
+  StarFilled,
+  Promotion,
+  School
+} from '@element-plus/icons-vue';
 
 // 导入头部背景图片
 import headerBg from '@/assets/1.jpeg';
@@ -177,6 +177,7 @@ import news2 from '@/assets/news2.png';
 import news3 from '@/assets/news3.png';
 import news4 from '@/assets/news4.png';
 import news5 from '@/assets/news5.png';
+
 export default {
   name: 'HomeView',
   components: {
@@ -186,7 +187,9 @@ export default {
     ElButton,
     // 注册图标组件
     UserFilled,
-    StarFilled
+    StarFilled,
+    Promotion,
+    School
   },
   data() {
     return {
@@ -206,39 +209,39 @@ export default {
       // 新闻数据
       newsList: [
         {
-          title: "中国石油大学志愿者赴克拉玛依开展支教活动",
-          description: "近日，中国石油大学30名志愿者前往克拉玛依偏远地区学校，开展为期两周的支教活动。志愿者们为当地学生带来了丰富多彩的课程，包括科学实验、艺术创作和体育活动。此次活动不仅提升了当地学生的综合素质，也为志愿者们提供了宝贵的实践机会。",
-          date: "2023-10-15",
+          title: "中石大克拉玛依校区志愿者暑期红色文化宣传活动",
+          description: "2023年暑假，中石大克拉玛依校区工学院协同谋划、统筹推进，集中开展暑期社会实践活动。",
+          date: "2023-10-23",
           image: news1,
-          link: "/news/1"
+          link: "/news1"
         },
         {
           title: "克拉玛依启动'绿色家园'环保公益项目",
-          description: "克拉玛依市政府联合多家企业，共同启动'绿色家园'环保公益项目，计划在三年内种植10万棵树。中国石油大学环境工程学院的师生积极参与该项目，提供技术支持并组织志愿者团队。项目首期已在市区周边种植了5000棵耐旱树种，有效改善了当地的生态环境。",
-          date: "2023-09-28",
+          description: "六五环境日 | 克拉玛依市组织开展2025年六五环境日暨环境保护宣传教育月系列活动",
+          date: "2025-06-11",
           image: news2,
-          link: "/news/2"
+          link: "/news2"
         },
         {
           title: "爱心医疗队为克拉玛依牧民提供免费诊疗服务",
-          description: "由石大医学院师生组成的爱心医疗队，深入克拉玛依牧区为当地牧民提供免费诊疗服务。医疗队携带了便携式医疗设备，为200多名牧民提供了健康检查、常见病治疗和健康咨询服务。此次活动特别关注了老人和儿童的健康问题，并为有需要的家庭提供了常用药品。",
-          date: "2023-10-05",
+          description: "【义诊服务】兵地融合共发展，医疗服务进牧场，健康共享惠民生。",
+          date: "2024-08-14",
           image: news3,
-          link: "/news/3"
+          link: "/news3"
         },
         {
-          title: "'暖冬行动'为克拉玛依贫困家庭送去温暖",
-          description: "中国石油大学志愿者协会发起'暖冬行动'，为克拉玛依200户贫困家庭送去过冬物资。志愿者们筹集了棉衣、棉被、取暖器等物资，并亲自送到受助家庭。此外，志愿者团队还为每户家庭检查了取暖设施的安全状况，确保他们能够安全温暖地度过寒冬。",
-          date: "2023-11-12",
+          title: "高校与社区“童”路行",
+          description: "自实施“搭桥互促”行动以来，克拉玛依团区委与本地各高校团组织的联系愈发密切了，可谓是“兄弟齐心，其利断金”，高校大学生与克拉玛依区青年志愿者、西部计划志愿者齐心协力，创造了一个个的青春高光时刻。",
+          date: " 2024-08-19",
           image: news4,
-          link: "/news/4"
+          link: "/news4"
         },
         {
-          title: "克拉玛依社区老人数字生活培训计划启动",
-          description: "针对老年人使用智能设备困难的问题，石大志愿者团队启动社区老人数字生活培训计划。该计划覆盖克拉玛依市10个社区，每周定期开展智能手机使用、电子支付、防诈骗等培训课程。截至目前，已有300多位老人参与培训，学习使用智能设备与家人沟通、线上购物等技能。",
-          date: "2023-10-20",
+          title: "“人人参与、处处可为”学雷锋活动",
+          description: "为深入贯彻落实习近平总书记关于学雷锋志愿服务的重要指示精神，推动形成“人人参与、处处可为”的学雷锋热潮，传递社会正能量，培育社会新风尚，中国石油大学（北京）克拉玛依校区团委积极开展各类学雷锋志愿服务活动。",
+          date: "2025-03-18",
           image: news5,
-          link: "/news/5"
+          link: "/news5"
         }
       ]
     }
@@ -253,10 +256,9 @@ export default {
   },
   methods: {
     goToNews(link) {
-      // 实际项目中这里应该是路由跳转
-      alert(`跳转到新闻详情: ${link}`);
-      // this.$router.push(link);
+      this.$router.push(link);
     },
+    // 添加 hoverCard 方法
     hoverCard(index) {
       this.activeCard = index;
     }
@@ -265,6 +267,7 @@ export default {
 </script>
 
 <style scoped>
+/* 样式保持不变 */
 .home-container {
   display: flex;
   flex-direction: column;
@@ -277,21 +280,14 @@ export default {
   display: flex;
   align-items: center;
   padding: 15px 30px;
-  height: 150px; /* 固定高度 */
-
-  /* 背景图片样式 */
+  height: 150px;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-
-  /* 文字阴影增强可读性 */
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
-
-  /* 添加半透明遮罩增强文字对比度 */
   position: relative;
 }
 
-/* 添加半透明遮罩 */
 .header::before {
   content: '';
   position: absolute;
@@ -299,11 +295,10 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.3); /* 半透明黑色遮罩 */
+  background: rgba(0, 0, 0, 0.3);
   z-index: 1;
 }
 
-/* 确保头部内容在遮罩上方 */
 .header > * {
   position: relative;
   z-index: 2;
@@ -317,7 +312,6 @@ export default {
   width: 100px;
   height: 100px;
   object-fit: contain;
-  /* 添加边框增强可见性 */
   border: 2px solid rgba(255, 255, 255, 0.8);
   border-radius: 50%;
   background-color: rgba(255, 255, 255, 0.2);
@@ -331,13 +325,13 @@ export default {
 .main-title {
   font-size: 28px;
   font-weight: bold;
-  color: #ffcc33; /* 修改为白色 */
+  color: #ffcc33;
   margin-bottom: 5px;
 }
 
 .sub-title {
   font-size: 18px;
-  color: #fff; /* 修改为白色 */
+  color: #fff;
   font-weight: 500;
 }
 
@@ -348,7 +342,7 @@ export default {
 
 .auth-links a {
   text-decoration: none;
-  color: #fff; /* 修改为白色 */
+  color: #fff;
   font-weight: bold;
   font-size: 18px;
   padding: 8px 15px;
@@ -408,7 +402,6 @@ export default {
   margin-bottom: 40px;
 }
 
-/* 新增的信息区域样式 */
 .info-section {
   display: flex;
   gap: 30px;
@@ -424,19 +417,17 @@ export default {
   padding-bottom: 10px;
 }
 
-/* 左侧新闻轮播区域 */
 .news-carousel {
   flex: 3;
   background-color: #fff;
   border-radius: 10px;
   padding: 20px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  height: 500px; /* 增加高度 */
+  height: 500px;
   display: flex;
   flex-direction: column;
 }
 
-/* 新闻项样式 */
 .news-item {
   display: flex;
   height: 100%;
@@ -488,7 +479,6 @@ export default {
   font-size: 14px;
 }
 
-/* 右侧信息区域 - 卡片样式 */
 .activities-info {
   flex: 2;
   display: flex;
@@ -568,7 +558,7 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 50%, transparent 100%);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.3) 50%, transparent 100%);
 }
 
 .activity-header {
@@ -628,7 +618,6 @@ export default {
   font-size: 18px;
 }
 
-/* 响应式调整 */
 @media (max-width: 992px) {
   .info-section {
     flex-direction: column;
@@ -763,6 +752,3 @@ export default {
   }
 }
 </style>
-
-
-
