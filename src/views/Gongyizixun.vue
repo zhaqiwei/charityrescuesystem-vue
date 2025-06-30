@@ -91,7 +91,7 @@
     <!-- 页脚 -->
     <footer class="gongyizixun-footer">
       <p>油城爱心桥 - 中国石油大学助力克拉玛依爱心救助平台</p>
-      <p>© 2023 版权所有 | 公益热线: 0990-1234567</p>
+      <p>© 2025 版权所有 </p>
     </footer>
   </div>
 </template>
