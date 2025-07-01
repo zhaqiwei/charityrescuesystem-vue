@@ -29,6 +29,7 @@ const router = createRouter({
         { path: '/news3', name: 'news3', component: () => import('../views/NewDetail3.vue') },
         { path: '/news4', name: 'news4', component: () => import('../views/NewDetail4.vue') },
         { path: '/news5', name: 'news5', component: () => import('../views/NewsDetail5.vue') },
+        { path: '/personal', name: 'personal', component: () => import('../views/PersonalHome.vue') },
         { path: '/postDetail', name: 'postDetail', component: () => import('../views/PostDetail.vue') },
          { path: '/ai', name: 'ai', component: () =>import('../views/ai.vue')  },
     ]
