@@ -28,6 +28,7 @@ const router = createRouter({
         { path: '/news4', name: 'news4', component: () => import('../views/NewDetail4.vue') },
         { path: '/news5', name: 'news5', component: () => import('../views/NewsDetail5.vue') },
         { path: '/postDetail', name: 'postDetail', component: () => import('../views/PostDetail.vue') },
+         { path: '/ai', name: 'ai', component: () =>import('../views/ai.vue')  },
     ]
 })
 
