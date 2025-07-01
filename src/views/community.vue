@@ -4,7 +4,10 @@
     <div class="page-header">
       <h1>互动交流社区</h1>
       <p>在这里分享你的公益故事、提问或参与讨论。</p>
+      <div class="header-actions">
       <el-button type="primary" @click="goToCreatePost">发布新帖</el-button>
+      <el-button type="info" @click="goToHome" style="margin-left: 10px;">返回首页</el-button>
+      </div>
     </div>
 
     <!-- 社区帖子列表 -->
@@ -49,7 +52,10 @@ interface Post {
   views: number
   comments: number
 }
-
+// 返回首页方法
+const goToHome = (): void => {
+  router.push('/')
+}
 const router = useRouter()
 
 // 模拟帖子数据（带类型）
@@ -103,6 +109,23 @@ const goToCreatePost = (): void => {
 </script>
 
 <style scoped>
+.header-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+@media (max-width: 768px) {
+  .header-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .header-actions .el-button {
+    width: 100%;
+  }
+}
 .community-page {
   padding: 40px 20px;
   background: linear-gradient(to bottom right, #f0f4f8, #e6eff7);
