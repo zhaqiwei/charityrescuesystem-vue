@@ -91,8 +91,17 @@
     <!-- 页脚 -->
     <footer class="gongyizixun-footer">
       <p>油城爱心桥 - 中国石油大学助力克拉玛依爱心救助平台</p>
-      <p>© 2025 版权所有 </p>
+      <p>© 2023 版权所有 | 公益热线: 0990-1234567</p>
     </footer>
+  </div>
+  <!-- 浮动按钮 - 访问大模型 -->
+  <div class="floating-chat-button" @click="openDoubaoChat">
+    <div class="chat-icon">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17h-2v-6h2v6zm0-8h-2V7h2v4zm5 6h-2v-2h2v2zm0-3h-2V7h2v8z" fill="white"/>
+      </svg>
+    </div>
+    <div class="chat-label">智能咨询</div>
   </div>
 </template>
 
@@ -150,7 +159,8 @@ export default {
           views: "1,765",
           image: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1"
         }
-      ]
+      ],
+      isChatOpen: false // 聊天窗口状态
     };
   },
   mounted() {
@@ -165,11 +175,104 @@ export default {
         card.style.zIndex = '1';
       });
     });
+  },
+  methods: {
+    openDoubaoChat() {
+      // 这里可以选择打开内嵌聊天窗口或跳转到聊天页面
+      // 方案1: 跳转到独立的聊天页面
+      this.$router.push('/ai');
+
+      // 方案2: 在当前页面打开模态框（需要额外实现模态框组件）
+      // this.isChatOpen = true;
+    }
   }
 };
 </script>
 
 <style scoped>
+
+/* 浮动聊天按钮样式 */
+.floating-chat-button {
+  position: fixed;
+  right: 30px;
+  bottom: 30px;
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #4a90e2, #3a78c2);
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 25px rgba(74, 144, 226, 0.4);
+  cursor: pointer;
+  z-index: 100;
+  transition: all 0.3s ease;
+  animation: float 3s ease-in-out infinite;
+}
+
+.floating-chat-button:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(74, 144, 226, 0.5);
+  background: linear-gradient(135deg, #3a78c2, #2a60a2);
+}
+
+.chat-icon {
+  width: 36px;
+  height: 36px;
+  background-color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.chat-icon svg {
+  width: 20px;
+  height: 20px;
+  fill: #4a90e2;
+}
+
+.chat-label {
+  color: white;
+  font-size: 12px;
+  font-weight: 500;
+  text-align: center;
+}
+
+/* 浮动动画 */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .floating-chat-button {
+    right: 20px;
+    bottom: 20px;
+    width: 60px;
+    height: 60px;
+  }
+
+  .chat-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .chat-icon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .chat-label {
+    font-size: 10px;
+  }
+}
+
 .gongyizixun-container {
   max-width: 1200px;
   margin: 30px auto;
