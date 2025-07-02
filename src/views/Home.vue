@@ -12,7 +12,8 @@
       </div>
 
       <div class="auth-links">
-        <router-link to="/login">登录/注册</router-link>
+        <router-link to="/login">登录</router-link>
+        <router-link to="/register">注册</router-link>
       </div>
     </div>
 
@@ -146,7 +147,11 @@
         </Card>
       </div>
     </div>
+<!--    <div class="footer">-->
+
+<!--    </div>-->
   </div>
+
 </template>
 
 <script>

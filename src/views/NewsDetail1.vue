@@ -22,7 +22,7 @@ const goBack = () => {
     <div style="color:#BBBBBB">活动时间：2023暑假</div>
     <br/>
     <!-- 新闻详情内容 -->
-    <div class="news-body" style="margin-left:100px;margin-right: 100px;border:dashed #BBBBBB">
+    <div class="news-body" >
       <p style="text-indent: 2em">2023年暑假，中石大克拉玛依校区工学院协同谋划、统筹推进，组建了16支社会实践团队，获批11个由国家民委、教育部、共青团中央、中国青年志愿者协会等多个部委司局牵头的国家专项，组织百余名师生赴新疆、青海、山东、河北、河南、湖北、陕西、四川、广东等9个省区，围绕理论普及宣讲、促进乡村振兴、发展成就观察、民族团结实践、石油学子成长成才等五大主题，集中开展“学习党的二十大 永远跟党走 奋进新征程”暑期社会实践活动，教育引导各族青年学生
         在实践中增知识、受教育、长才干、作贡献，努力成长为有理想、敢担当、能吃苦、肯奋斗的新时代好青年。</p>
       <br/>
@@ -92,11 +92,11 @@ const goBack = () => {
   padding-bottom: 10px;
 }
 .news-body {
-  max-width: 800px; /* 固定最大宽度，页面缩放时宽度不变 */
-  margin: 0 auto;   /* 水平居中 */
-  padding: 20px;    /* 内边距 */
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
   border: 2px dashed #BBBBBB;
-  box-sizing: border-box; /* 内边距和边框包含在宽度内 */
+  box-sizing: border-box;
 }
 .container {
   display: flex;

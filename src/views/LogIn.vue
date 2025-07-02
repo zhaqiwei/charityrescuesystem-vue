@@ -1,344 +1,145 @@
 <template>
-  <div class="login-container">
-    <div class="form-container" :class="{'right-panel-active': showRegister}">
-      <!-- 登录表单 -->
-      <div class="form sign-in-container">
-        <form @submit.prevent="handleLogin">
-          <h1>登录账号</h1>
-          <input type="text" placeholder="用户名" v-model="loginUsername" required />
-          <input type="password" placeholder="密码" v-model="loginPassword" required />
-          <button type="submit">登录</button>
-        </form>
-      </div>
-
-      <!-- 注册表单 -->
-      <div class="form sign-up-container">
-        <form @submit.prevent="handleRegister">
-          <h1>创建账号</h1>
-          <input type="text" placeholder="用户名" v-model="registerUsername" required />
-          <input type="password" placeholder="密码" v-model="registerPassword" required />
-          <input type="password" placeholder="确认密码" v-model="registerConfirmPassword" required />
-          <button type="submit">注册</button>
-        </form>
-      </div>
-
-      <!-- 覆盖面板 -->
-      <div class="overlay-container">
-        <div class="overlay">
-          <div class="overlay-panel overlay-left">
-            <h1>已有账号?</h1>
-            <p>请使用您的账号信息登录</p>
-            <button class="ghost" @click="showRegister = false">登录</button>
-          </div>
-          <div class="overlay-panel overlay-right">
-            <h1>新用户?</h1>
-            <p>立即注册，开启您的旅程</p>
-            <button class="ghost" @click="showRegister = true">注册</button>
-          </div>
+    <div style="height: 100vh;display:flex; align-items:center;justify-content: center;background-color:	#FFFFF0  ">
+      <div style="display:flex;background-color:		#FFFAFA;width:50%;border-radius: 20px;border: solid 1px #E0FFFF;overflow: hidden">
+        <div style="flex:1">
+          <img src="@/assets/shoubei.png" alt="" style="width:100%;height: 100%">
         </div>
+        <div style="flex: 1;display:flex;align-items: center;justify-content: center">
+          <el-form :model="user" style="width:80%" :rules="rules" ref="loginRef">
+            <div style="font-size:20px;font-weight: bold;text-align: center;margin-bottom: 5px">登录账号</div>
+
+            <el-form-item prop="username">
+              <el-input  size="medium" placeholder="用户名" v-model="user.username"></el-input>
+            </el-form-item>
+            <el-form-item prop="password">
+              <el-input  size="medium" show-password placeholder="密码" v-model="user.password"></el-input>
+            </el-form-item>
+            <el-form-item prop="code">
+              <div style="display:flex">
+                <el-input style="flex:1 "  size="medium" placeholder="验证码" v-model="user.code"></el-input>
+                <div style="flex:1 ;height:40px"><valid-code @update:value="getCode" /></div>
+              </div>
+            </el-form-item>
+
+            <el-form-item>
+              <el-button type="primary" style="width:100%" @click="login">登录</el-button>
+
+            </el-form-item>
+            <div style="display: flex">
+              <div style="flex:1"> <span style="color: darkgray">还没有账号?请</span><span style="color: #1a73e8;cursor: pointer" @click="$router.push('/register')">注册</span></div>
+
+            </div>
+          </el-form>
+        </div>
+
       </div>
     </div>
-  </div>
 </template>
 
 <script>
 import { ElMessage } from 'element-plus'
 import request from '@/utils/request'
+import ValidCode from "@/components/ValidCode.vue";
 
 export default {
-  name: 'LoginView',
+  name: 'Login',
+  components:{
+    ValidCode
+  },
   data() {
+    //   校验验证码
+    const validateCode = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入验证码'))
+      } else if(value.toLowerCase() !== this.code){
+        callback(new Error('验证码错误'))
+      }else{
+        callback()
+      }
+    }
+
     return {
-      showRegister: false,
-      loginUsername: '',
-      loginPassword: '',
-      registerUsername: '',
-      registerPassword: '',
-      registerConfirmPassword: ''
+      code:'',
+      user:{
+        code:'',
+        username: '',
+        password: ''
+      },
+      rules:{
+        username:[
+          {required:true,message:'请输入账号',trigger:'blur'}
+        ],
+        password:[
+          {required:true,message:'请输入密码',trigger:'blur'}
+        ],
+        code:[
+          {validator:validateCode,trigger:'blur'}
+        ]
+      }
     }
   },
+  created(){
+
+  },
   methods: {
-    async handleLogin() {
-      if (!this.loginUsername || !this.loginPassword) {
-        ElMessage.error('请输入用户名和密码')
-        return
-      }
-
-      try {
-        const response = await request.post('/user/login', {
-          username: this.loginUsername,
-          password: this.loginPassword
-        })
-
-        if (response.code === 200) {
-          // 存储token（简单实现）
-          localStorage.setItem('token', response.data.token)
-
-          ElMessage.success('登录成功')
-          this.$router.push('/')
-        } else {
-          ElMessage.error(response.message || '登录失败')
-        }
-      } catch (error) {
-        ElMessage.error('登录请求失败，请检查网络')
-      }
+    getCode(code){
+      this.code=code.toLowerCase()
     },
-
-    async handleRegister() {
-      if (this.registerPassword !== this.registerConfirmPassword) {
-        ElMessage.error('两次输入的密码不一致')
-        return
-      }
-
-      try {
-        const response = await request.post('/user/register', {
-          username: this.registerUsername,
-          password: this.registerPassword
-        })
-
-        if (response.code === 200) {
-          ElMessage.success('注册成功，请登录')
-          this.showRegister = false
-        } else {
-          ElMessage.error(response.message || '注册失败')
+    login(){
+      this.$refs['loginRef'].validate((valid) => {
+        if(valid){
+          //验证通过
+          request.post('/user/login',this.user).then(res => {
+            if(res.code === '200'){
+                this.$router.push('/')
+                this.$message.success('登陆成功')
+              //存储用户信息
+                localStorage.setItem('honey-user',JSON.stringify(res.data))
+            }else{
+              this.$message.error(res.msg)
+            }
+          })
         }
-      } catch (error) {
-        ElMessage.error('注册请求失败，请检查网络')
-      }
+      })
     }
   }
 }
 </script>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <style scoped>
-.login-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background: url('../assets/shoubei.png') no-repeat center center fixed;
-  background-size: cover;
-  padding: 20px;
-}
 
-.form-container {
-  position: relative;
-  width: 850px;
-  height: 500px;
-  background: rgba(255, 255, 255, 0.92);
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
-  backdrop-filter: blur(8px);
-}
-
-.form-container.right-panel-active .sign-in-container {
-  transform: translateX(100%);
-}
-
-.form-container.right-panel-active .sign-up-container {
-  transform: translateX(100%);
-  opacity: 1;
-  z-index: 5;
-}
-
-.form-container.right-panel-active .overlay-container {
-  transform: translateX(-100%);
-}
-
-.form-container.right-panel-active .overlay {
-  transform: translateX(50%);
-}
-
-.form-container.right-panel-active .overlay-left {
-  transform: translateX(0);
-}
-
-.form-container.right-panel-active .overlay-right {
-  transform: translateX(20%);
-}
-
-.form {
-  position: absolute;
-  top: 0;
-  height: 100%;
-  transition: all 0.6s ease-in-out;
-}
-
-.sign-in-container {
-  left: 0;
-  width: 50%;
-  z-index: 2;
-}
-
-.sign-up-container {
-  left: 0;
-  width: 50%;
-  opacity: 0;
-  z-index: 1;
-}
-
-form {
-  background: #fff;
-  display: flex;
-  flex-direction: column;
-  padding: 0 50px;
-  height: 100%;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
-h1 {
-  font-weight: bold;
-  margin: 0;
-  color: #333;
-  font-size: 32px;
-  margin-bottom: 30px;
-}
-
-input {
-  background: #f5f7fa;
-  border: 1px solid #e0e3e9;
-  padding: 14px 18px;
-  margin: 10px 0;
-  width: 100%;
-  border-radius: 10px;
-  outline: none;
-  transition: all 0.3s;
-  font-size: 15px;
-}
-
-input:focus {
-  border-color: #4a6cf7;
-  box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.2);
-}
-
-button {
-  border-radius: 50px;
-  border: none;
-  background: #4a6cf7;
-  color: #fff;
-  font-size: 15px;
-  font-weight: 600;
-  padding: 14px 45px;
-  letter-spacing: 1px;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  margin-top: 20px;
-  box-shadow: 0 4px 15px rgba(74, 108, 247, 0.3);
-  width: 100%;
-}
-
-button:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(74, 108, 247, 0.4);
-  background: #3a5ae8;
-}
-
-button:active {
-  transform: translateY(1px);
-}
-
-button.ghost {
-  background: transparent;
-  border: 2px solid #fff;
-  box-shadow: none;
-  width: auto;
-  margin-top: 15px;
-}
-
-button.ghost:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.overlay-container {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  width: 50%;
-  height: 100%;
-  overflow: hidden;
-  transition: transform 0.6s ease-in-out;
-  z-index: 100;
-}
-
-.overlay {
-  background: url('../assets/b1.png') no-repeat center center;
-  background-size: cover;
-  color: #fff;
-  position: relative;
-  left: -100%;
-  height: 100%;
-  width: 200%;
-
-
-  transform: translateX(0);
-  transition: transform 0.6s ease-in-out;
-  display: flex;
-}
-
-.overlay-panel {
-  position: absolute;
-  top: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 0 40px;
-  height: 100%;
-  width: 50%;
-  text-align: center;
-  transform: translateX(0);
-  transition: transform 0.6s ease-in-out;
-}
-
-.overlay-left {
-  transform: translateX(-20%);
-}
-
-.overlay-right {
-  right: 0;
-  transform: translateX(0);
-}
-
-.overlay-panel h1 {
-  color: white;
-  font-size: 36px;
-  margin-bottom: 15px;
-}
-
-.overlay-panel p {
-  font-size: 16px;
-  margin: 0 0 25px;
-  color: rgba(255, 255, 255, 0.9);
-}
-
-/* 响应式设计 */
-@media (max-width: 768px) {
-  .form-container {
-    width: 100%;
-    height: auto;
-    min-height: 500px;
-  }
-
-  .sign-in-container,
-  .sign-up-container {
-    width: 100%;
-    position: relative;
-  }
-
-  .overlay-container {
-    display: none;
-  }
-
-  .form-container.right-panel-active .sign-in-container,
-  .form-container.right-panel-active .sign-up-container {
-    transform: translateX(0);
-  }
-
-  .form-container.right-panel-active .sign-in-container {
-    opacity: 0;
-  }
-}
 </style>

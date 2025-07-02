@@ -50,4 +50,7 @@ request.interceptors.response.use(response => {
     return Promise.reject(error);
 });
 
+// 新增：打印当前 baseURL（开发环境调试用）
+console.log('当前环境的 baseURL:', import.meta.env.VITE_API_BASE_URL);
+
 export default request;
