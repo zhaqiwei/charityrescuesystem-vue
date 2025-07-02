@@ -85,22 +85,34 @@ export default {
     getCode(code){
       this.code=code.toLowerCase()
     },
-    login(){
+    login() {
       this.$refs['loginRef'].validate((valid) => {
-        if(valid){
-          //验证通过
-          request.post('/user/login',this.user).then(res => {
-            if(res.code === '200'){
-                this.$router.push('/')
-                this.$message.success('登陆成功')
-              //存储用户信息
-                localStorage.setItem('honey-user',JSON.stringify(res.data))
-            }else{
-              this.$message.error(res.msg)
+        if (valid) {
+          request.post('/user/login', this.user).then(res => {
+            if (res.code === '200') {
+              // 存储用户信息（包含 role）
+              localStorage.setItem('honey-user', JSON.stringify(res.data));
+
+              // 根据角色跳转不同页面
+              const role = res.data.role;
+              if (role === 'user') {
+                this.$router.push('/');
+              } else if (role === 'volunteer') {
+                this.$router.push('/personal');
+              } else if (role === 'admin') {
+                this.$router.push('/Admin');
+              } else {
+                // 默认跳转（如果角色异常）
+                this.$router.push('/');
+              }
+
+              this.$message.success('登陆成功');
+            } else {
+              this.$message.error(res.msg);
             }
-          })
+          });
         }
-      })
+      });
     }
   }
 }

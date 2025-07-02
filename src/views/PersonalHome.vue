@@ -315,12 +315,16 @@
         <span>{{ successMessage }}</span>
       </div>
     </main>
-    <div><router-link to="/" style="background-color: aquamarine"><el-button>返回主页</el-button></router-link></div>
+<!--    <div><router-link to="/" style="background-color: aquamarine"><el-button>返回主页</el-button></router-link></div>-->
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router'; // 新增：导入路由钩子
+// 获取路由实例
+const router = useRouter();
+
 // 侧边栏状态
 const isSidebarCollapsed = ref(false);
 const activeMenu = ref('personalInfo');
@@ -491,6 +495,13 @@ const openDeleteAccount = () => {
 // 退出登录
 const logout = () => {
   if (confirm("确定要退出登录吗？")) {
+    // 清除用户信息（示例：如果使用了localStorage存储token）
+    localStorage.removeItem('token');
+
+    // 使用路由跳转到登录页面
+    router.push('/login');
+
+    // 可选：显示退出成功提示
     isSaveSuccess.value = true;
     successMessage.value = "已退出登录";
     const toast = document.querySelector('.success-toast');
@@ -498,7 +509,6 @@ const logout = () => {
     setTimeout(() => {
       toast.classList.remove('show-toast');
       isSaveSuccess.value = false;
-      // 这里可以添加实际的退出登录逻辑
     }, 2000);
   }
 };
